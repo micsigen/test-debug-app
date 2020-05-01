@@ -18,22 +18,31 @@ class AccountService(
         val persistentAccount: PersistentAccount? = accountRepository.findById(accountHistory.id).block()
         logger.info("Bank account: {}", persistentAccount)
 
-        persistentAccount!!.balance += accountHistory.amount
-        accountRepository.insert(persistentAccount!!).doOnSuccess {
-            logger.info("Account with new balance: {}", it)
-        }.onErrorResume {
+        val newBalance: Double = persistentAccount!!.balance + accountHistory.amount
 
-        }.subscribe()
+        accountRepository.deleteById(persistentAccount.id!!)
+        accountRepository.save(PersistentAccount(persistentAccount.id!!, persistentAccount.name, newBalance))
+                .doOnSuccess {
+                    logger.info("Account with new balance: {}", it)
+                }
+                .subscribe()
     }
 
     fun withdraw(accountHistory: AccountHistory) {
         val persistentAccount: PersistentAccount? = accountRepository.findById(accountHistory.id).block()
         logger.info("Bank account: {}", persistentAccount)
 
-        persistentAccount!!.balance -= accountHistory.amount
-        logger.info("Account with new balance: {}", persistentAccount)
+        val newBalance: Double = persistentAccount!!.balance - accountHistory.amount
 
-        accountRepository.save(persistentAccount!!)
+        accountRepository.deleteById(persistentAccount.id!!)
+        accountRepository.save(PersistentAccount(persistentAccount.id, persistentAccount.name, newBalance))
+                .doOnSuccess {
+                    logger.info("Bank account saved with new balance: {}", it)
+                }
+                .doOnError {
+                    logger.error(it.localizedMessage)
+                }
+                .subscribe()
     }
 
     fun findById(id: String): Account {
@@ -42,8 +51,11 @@ class AccountService(
     }
 
     fun put(account: Account) {
-        val persistentAccount: PersistentAccount? = accountRepository.save(PersistentAccount(account.id, account.name, account.balance)).block()
-        logger.info("Bank account saved: {}", persistentAccount)
+        accountRepository.save(PersistentAccount(account.id, account.name, account.balance))
+                .doOnSuccess {
+                    logger.info("Bank account saved: {}", it)
+                }
+                .subscribe()
     }
 
 
