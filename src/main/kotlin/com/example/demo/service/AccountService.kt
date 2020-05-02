@@ -23,7 +23,10 @@ class AccountService(
         accountRepository.deleteById(persistentAccount.id!!)
         accountRepository.save(PersistentAccount(persistentAccount.id!!, persistentAccount.name, newBalance))
                 .doOnSuccess {
-                    logger.info("Account with new balance: {}", it)
+                    logger.info("Bank account with new balance: {}", it)
+                }
+                .doOnError {
+                    logger.error(it.localizedMessage)
                 }
                 .subscribe()
     }
@@ -54,6 +57,9 @@ class AccountService(
         accountRepository.save(PersistentAccount(account.id, account.name, account.balance))
                 .doOnSuccess {
                     logger.info("Bank account saved: {}", it)
+                }
+                .doOnError {
+                    logger.error(it.localizedMessage)
                 }
                 .subscribe()
     }
