@@ -10,7 +10,8 @@ import org.springframework.stereotype.Service
 
 @Service
 class AccountService(
-        private val accountRepository: AccountRepository
+    private val accountRepository: AccountRepository,
+    private val balanceService: BalanceService
 ) {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
@@ -18,7 +19,8 @@ class AccountService(
         val persistentAccount: PersistentAccount? = accountRepository.findById(accountHistory.id).block()
         logger.info("Bank account: {}", persistentAccount)
 
-        val newBalance: Double = persistentAccount!!.balance + accountHistory.amount
+        // Call business logic
+        val newBalance: Double = balanceService.increase(persistentAccount!!, accountHistory.amount)
 
         accountRepository.deleteById(persistentAccount.id!!)
         accountRepository.save(PersistentAccount(persistentAccount.id!!, persistentAccount.name, newBalance))
@@ -35,7 +37,7 @@ class AccountService(
         val persistentAccount: PersistentAccount? = accountRepository.findById(accountHistory.id).block()
         logger.info("Bank account: {}", persistentAccount)
 
-        val newBalance: Double = persistentAccount!!.balance - accountHistory.amount
+        val newBalance: Double = balanceService.withdraw(persistentAccount!!, accountHistory.amount)
 
         accountRepository.deleteById(persistentAccount.id!!)
         accountRepository.save(PersistentAccount(persistentAccount.id, persistentAccount.name, newBalance))
