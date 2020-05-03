@@ -11,6 +11,10 @@ class BalanceService {
     }
 
     fun withdraw(persistentAccount: PersistentAccount, amount: Double): Double {
-        return persistentAccount.balance - amount
+        val newBalance = persistentAccount.balance - amount
+        if (newBalance < 0) throw BalanceOutException("New balance $newBalance is less than 0!")
+        return newBalance
     }
 }
+
+class BalanceOutException(override val message: String?) : Exception(message)
