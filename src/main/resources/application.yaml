@@ -1,6 +1,3 @@
-logging:
-  level:
-    org.springframework.data.mongodb.core.ReactiveMongoTemplate: DEBUG
 
 spring:
   data:
@@ -11,3 +8,6 @@ spring:
       password: password
       database: test-debug-app
       authentication-database: admin
+
+server:
+  port: 8081
