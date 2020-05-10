@@ -1,0 +1,31 @@
+@startuml name "System diagram"
+
+rectangle "UI test" #whitesmoke {
+
+  [test-debug-app-ui] as ui #gold
+  rectangle "Integration test" #whitesmoke {
+
+    package "test-debug-app" #lightblue {
+        () "GET /account/{id}" as query_endpoint #magenta
+        () "POST /account/increase" as increase_endpoint #magenta
+        () "POST /account/withdraw" as withdraw_endpoint #magenta
+        () "PUT /account" as create_endpoint
+        [Business service] as service
+        query_endpoint -- service
+        increase_endpoint -- service
+        withdraw_endpoint -- service
+        create_endpoint -- service
+    }
+
+    rectangle "Database" #lightblue {
+        database "MongoDB" as db #aqua
+    }
+
+    service -down... db
+
+  }
+  ui -down-( query_endpoint
+  ui -down-( increase_endpoint
+  ui -down-( withdraw_endpoint
+}
+@enduml

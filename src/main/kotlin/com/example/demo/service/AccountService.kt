@@ -17,7 +17,8 @@ class AccountService(
 
     fun increase(accountHistory: AccountHistory) {
         val persistentAccount: PersistentAccount? = accountRepository.findById(accountHistory.id).block()
-        logger.info("Bank account: {}", persistentAccount)
+        logger.info("---------Increase process started-----------")
+        logger.info("Current Bank account: {}", persistentAccount)
 
         // Call business logic
         val newBalance: Double = balanceService.increase(persistentAccount!!, accountHistory.amount)
@@ -25,7 +26,7 @@ class AccountService(
         accountRepository.deleteById(persistentAccount.id!!)
         accountRepository.save(PersistentAccount(persistentAccount.id!!, persistentAccount.name, newBalance))
                 .doOnSuccess {
-                    logger.info("Bank account with new balance: {}", it)
+                    logger.info("Bank account saved with new balance: {}", it)
                 }
                 .doOnError {
                     logger.error(it.localizedMessage)
@@ -35,6 +36,7 @@ class AccountService(
 
     fun withdraw(accountHistory: AccountHistory) {
         val persistentAccount: PersistentAccount? = accountRepository.findById(accountHistory.id).block()
+        logger.info("---------Withdraw process started-----------")
         logger.info("Bank account: {}", persistentAccount)
 
         val newBalance: Double = balanceService.withdraw(persistentAccount!!, accountHistory.amount)
