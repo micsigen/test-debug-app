@@ -2,8 +2,10 @@ package com.example.demo.service
 
 import com.example.demo.controller.Account
 import com.example.demo.controller.AccountHistory
+import com.example.demo.repository.AccountHistoryRepository
 import com.example.demo.repository.AccountRepository
 import com.example.demo.repository.PersistentAccount
+import com.example.demo.repository.PersistentAccountHistory
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service
 @Service
 class AccountService(
     private val accountRepository: AccountRepository,
+    private val accountHistoryRepository: AccountHistoryRepository,
     private val balanceService: BalanceService
 ) {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
@@ -22,6 +25,10 @@ class AccountService(
 
         // Call business logic
         val newBalance: Double = balanceService.increase(persistentAccount!!, accountHistory.amount)
+
+        val persistentAccountHistory: PersistentAccountHistory = PersistentAccountHistory(null, persistentAccount.id!!, accountHistory.amount, persistentAccount.balance, newBalance)
+        accountHistoryRepository.save(persistentAccountHistory)
+                .subscribe()
 
         accountRepository.deleteById(persistentAccount.id!!)
         accountRepository.save(PersistentAccount(persistentAccount.id!!, persistentAccount.name, newBalance))
@@ -40,6 +47,10 @@ class AccountService(
         logger.info("Bank account: {}", persistentAccount)
 
         val newBalance: Double = balanceService.withdraw(persistentAccount!!, accountHistory.amount)
+
+        val persistentAccountHistory: PersistentAccountHistory = PersistentAccountHistory(null, persistentAccount.id!!, accountHistory.amount, persistentAccount.balance, newBalance)
+        accountHistoryRepository.save(persistentAccountHistory)
+                .subscribe()
 
         accountRepository.deleteById(persistentAccount.id!!)
         accountRepository.save(PersistentAccount(persistentAccount.id, persistentAccount.name, newBalance))

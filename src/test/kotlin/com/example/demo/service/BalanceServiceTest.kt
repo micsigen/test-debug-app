@@ -17,7 +17,7 @@ class BalanceServiceTest {
         // when
         val newBalance: Double = balanceService.increase(persistentAccount, amount)
         // then
-        Assertions.assertEquals(1600.0, newBalance)
+        Assertions.assertEquals(1600.5, newBalance)
     }
 
     @Test
