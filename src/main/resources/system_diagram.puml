@@ -2,6 +2,8 @@
 
 rectangle "UI test" #whitesmoke {
 
+  rectangle [Browser <&browser>] as browser
+
   [test-debug-app-ui] as ui #gold
   rectangle "Integration test" #whitesmoke {
 
@@ -21,7 +23,8 @@ rectangle "UI test" #whitesmoke {
         database "MongoDB" as db #aqua
     }
 
-    service -down... db
+    service -down. db
+    browser -down. ui
 
   }
   ui -down-( query_endpoint
