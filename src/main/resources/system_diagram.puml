@@ -9,12 +9,12 @@ rectangle "UI test" #whitesmoke {
 
     package "test-debug-app" #lightblue {
         () "GET /account/{id}" as query_endpoint #magenta
-        () "POST /account/increase" as increase_endpoint #magenta
+        () "POST /account/deposit" as deposit_endpoint #magenta
         () "POST /account/withdraw" as withdraw_endpoint #magenta
         () "PUT /account" as create_endpoint
         [Business service] as service
         query_endpoint -- service
-        increase_endpoint -- service
+        deposit_endpoint -- service
         withdraw_endpoint -- service
         create_endpoint -- service
     }
@@ -28,7 +28,7 @@ rectangle "UI test" #whitesmoke {
 
   }
   ui -down-( query_endpoint
-  ui -down-( increase_endpoint
+  ui -down-( deposit_endpoint
   ui -down-( withdraw_endpoint
 }
 @enduml

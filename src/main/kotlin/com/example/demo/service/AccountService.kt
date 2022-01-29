@@ -18,7 +18,7 @@ class AccountService(
 ) {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
-    fun increase(accountHistory: AccountHistory) {
+    fun deposit(accountHistory: AccountHistory) {
         val persistentAccount: PersistentAccount? = accountRepository.findById(accountHistory.id).block()
         logger.info("---------Increase process started-----------")
         logger.info("Current Bank account: {}", persistentAccount)

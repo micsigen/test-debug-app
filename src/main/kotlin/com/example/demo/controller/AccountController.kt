@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.*
 class AccountController(
         val accountService: AccountService
 ) {
-    @PostMapping("/increase")
-    fun increase(@RequestBody accountHistory: AccountHistory) {
-        accountService.increase(accountHistory)
+    @PostMapping("/deposit")
+    fun deposit(@RequestBody accountHistory: AccountHistory) {
+        accountService.deposit(accountHistory)
     }
 
     @PostMapping("/withdraw")
