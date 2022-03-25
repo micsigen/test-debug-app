@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service
 class BalanceService {
 
     fun increase(persistentAccount: PersistentAccount, amount: Double): Double {
-        return persistentAccount.balance + amount + (amount * 0.005)
+        return persistentAccount.balance + amount
     }
 
     fun withdraw(persistentAccount: PersistentAccount, amount: Double): Double {

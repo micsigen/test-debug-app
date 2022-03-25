@@ -26,7 +26,7 @@ class AccountService(
         // Call business logic
         val newBalance: Double = balanceService.increase(persistentAccount!!, accountHistory.amount)
 
-        val persistentAccountHistory: PersistentAccountHistory = PersistentAccountHistory(null, persistentAccount.id!!, accountHistory.amount, persistentAccount.balance, newBalance)
+        val persistentAccountHistory = PersistentAccountHistory(null, persistentAccount.id!!, accountHistory.amount, persistentAccount.balance, newBalance)
         accountHistoryRepository.save(persistentAccountHistory)
                 .subscribe()
 
@@ -48,7 +48,7 @@ class AccountService(
 
         val newBalance: Double = balanceService.withdraw(persistentAccount!!, accountHistory.amount)
 
-        val persistentAccountHistory: PersistentAccountHistory = PersistentAccountHistory(null, persistentAccount.id!!, accountHistory.amount, persistentAccount.balance, newBalance)
+        val persistentAccountHistory = PersistentAccountHistory(null, persistentAccount.id!!, accountHistory.amount, persistentAccount.balance, newBalance)
         accountHistoryRepository.save(persistentAccountHistory)
                 .subscribe()
 
@@ -64,7 +64,9 @@ class AccountService(
     }
 
     fun findById(id: String): Account {
-        val persistentAccount: PersistentAccount? = accountRepository.findById(id).block()
+        logger.info("---------Query account by id process started-----------")
+        val persistentAccount: PersistentAccount = accountRepository.findById(id).block() ?: throw AccountNotFoundException()
+        logger.info("Account found: {}", persistentAccount)
         return Account(persistentAccount!!.id!!, persistentAccount!!.name, persistentAccount!!.balance)
     }
 
@@ -78,6 +80,6 @@ class AccountService(
                 }
                 .subscribe()
     }
-
-
 }
+
+class AccountNotFoundException() : Exception()
