@@ -52,25 +52,3 @@ _GET /account/1_
 >}
 
 The corresponding Postman scripts are placed under _src/resources_ folder.
-
-# Useful commands
-1. Create docker image into local repository (Dockerfile is used)
-> docker build . -t test-debug-app:0.0.1-SNAPSHOT
-
-2. Login into Azure
-> az login
-
-3. Login into registry with docker
-> az acr login -n <REGISTRY>
-
-4. Tag your image, that you want to upload into <REGISTRY>
-> docker tag <YOUR_DOCKER_IMAGE> <REGISTRY>.azurecr.io/test-debug-app:0.0.1-SNAPSHOT
-
-5. Push the image into <REGISTRY>
-> docker push <REGISTRY>.azurecr.io/test-debug-app:0.0.1-SNAPSHOT
-
-# Useful links
-1. Overall Azure CLI features: https://docs.microsoft.com/hu-hu/cli/azure/
-2. Push docker image into registry in Azure: https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-docker-cli?tabs=azure-cli
-3. Create and deploy application into AKS: https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough-portal
-4. Helm: helm.sh
